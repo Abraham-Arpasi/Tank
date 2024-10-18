@@ -1,0 +1,84 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class Player : MonoBehaviour
+{
+    //just to make the inspector more clean and less cludered.
+    private Rigidbody rb;
+
+    //the header helps things be organized in the inspector.
+    [Header("Movement data")]
+
+    // this is public which means it can be accessed from any script from anywhere.
+    public float moveSpeed;
+    public float rotationSpeed;
+
+    private float verticalInput;
+    private float horizontalInput;
+   
+    public LayerMask whatisAimMask;
+
+    //setting up the sphere to show where you are aiming with the mouse.
+    public Transform aimTransform;
+
+    // Start is called before the first frame update
+    private void Start()
+    {
+        //because we made rigidbody private, this will find the rigidbody of the same gameobject this script is on.
+       rb = GetComponent<Rigidbody>();
+    }
+
+    // Update is called once per frame
+    // this is where you want to handle player inputs, like mouse and keyboared button presses.
+    void Update()
+    {
+        //this will call the function.
+        UpdateAim();
+
+        // This is the using the old input system which lets the keyboared controll its movements using the 'W' and 'S' keys because we called it "Vertical".
+        verticalInput = Input.GetAxis("Vertical");
+
+        //this is using the old input system which uses the keyboared and its movement is controlled with 'A' and 'D' because we called it "Horizontal"
+        horizontalInput = Input.GetAxis("Horizontal");
+
+        //we are moveing the tank vetically backwards it flips the horizontal rotation to the opposite direction, this will make the tanks movement more smooth and less confusing.
+        if (verticalInput < 0)
+            horizontalInput = -Input.GetAxis("Horizontal");
+
+    }
+
+    // this is where you want to handle movements of objects and etc.
+    private void FixedUpdate()
+    {
+        // the 'movement' which is blue is a local variable which can only be used in the fixedupdate and can not be initualized anywhere else.
+        // this will prevent the tank from rolling around when moving forward and rotating.
+        Vector3 movement = transform.forward * moveSpeed * verticalInput;
+
+        //this is what commands the tank to move around, the x and y position has a value of 0 while the z position is controlled by the value of moveSpeed.
+        //new Vector3 is used because we are moving it in a 3D space, vector2 would be used if it was a 2D space.
+        //the moveSpeed and verticalInput are multipled together so that when we press the keyboared it moves the tank based of the moveSpeed instead of it moving automatically on its own.
+        //rb.velocity = new Vector3(0, 0, moveSpeed * verticalInput); we are using the new one below instead to prevent any rolling.
+        rb.velocity = movement;
+
+        //this is what controllers the rotation of the tank why having it rotate on the y axis. this will let the  tank spin.
+        transform.Rotate(0, horizontalInput * rotationSpeed, 0);
+    }
+
+    //this is a function that will be used for aiming the gun of the tank.
+    private void UpdateAim()
+    {
+        //we are creating a ray what we will be shooting
+        //using the main camera that we always use in the game to aim, convert screenpoint information to ray and pass it to the mouse position.
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+        //if we got a hit we will be using this.
+        RaycastHit hit;
+
+        if(Physics.Raycast(ray, out hit, Mathf.Infinity, whatisAimMask))
+        {
+            //where the sphere is located.
+            aimTransform.position = hit.point;
+        }
+    }
+}
