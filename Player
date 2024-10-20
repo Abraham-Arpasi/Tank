@@ -66,6 +66,10 @@ public class Player : MonoBehaviour
             // Debug.Log("shoot");
             //this will create the bullets by using the gameobject prefab for the bullets and where the bullets are created and where they go.
             GameObject bullet = Instantiate(bulletPrefab, gunPoint.position, gunPoint.rotation);
+            //this will make the bullet go foward and not drop to the ground.
+            bullet.GetComponent<Rigidbody>().velocity = gunPoint.forward * bulletSpeed;
+            //this will make the bullet disappear after a certain amount of time.
+            Destroy(bullet,7);
         }
     }
 
