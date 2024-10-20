@@ -17,6 +17,13 @@ public class Player : MonoBehaviour
     private float verticalInput;
     private float horizontalInput;
 
+    [Header("Gun data")]
+
+    public Transform gunPoint;
+    public float bulletSpeed;
+    // this creates the bullets that we want.
+    public GameObject bulletPrefab;
+
     [Header("Tower data")]
 
     public Transform tankTowerTransform;
@@ -53,6 +60,13 @@ public class Player : MonoBehaviour
         if (verticalInput < 0)
             horizontalInput = -Input.GetAxis("Horizontal");
 
+        //when we click the left mouse button it shoots.
+        if (Input.GetKeyDown(KeyCode.Mouse0))
+        {
+            // Debug.Log("shoot");
+            //this will create the bullets by using the gameobject prefab for the bullets and where the bullets are created and where they go.
+            GameObject bullet = Instantiate(bulletPrefab, gunPoint.position, gunPoint.rotation);
+        }
     }
 
     // this is where you want to handle movements of objects and etc.
@@ -71,11 +85,14 @@ public class Player : MonoBehaviour
         //this is what controllers the rotation of the tank why having it rotate on the y axis. this will let the  tank spin.
         transform.Rotate(0, horizontalInput * rotationSpeed, 0);
 
-        //this creates the rotation for the tanks tower while aiming.
+        //this creates the rotation and speed for the tanks tower while aiming.
         Vector3 direction = aimTransform.position - tankTowerTransform.position;
         direction.y = 0;
         Quaternion targetRotation = Quaternion.LookRotation(direction);
         tankTowerTransform.rotation = Quaternion.RotateTowards(tankTowerTransform.rotation, targetRotation, towerRotationSpeed);
+
+        //this creates the bullets that are being shot.
+
     }
 
     //this is a function that will be used for aiming the gun of the tank.
