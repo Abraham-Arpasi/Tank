@@ -95,7 +95,6 @@ public class Player : MonoBehaviour
         Quaternion targetRotation = Quaternion.LookRotation(direction);
         tankTowerTransform.rotation = Quaternion.RotateTowards(tankTowerTransform.rotation, targetRotation, towerRotationSpeed);
 
-        //this creates the bullets that are being shot.
 
     }
 
