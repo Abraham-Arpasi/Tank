@@ -1,0 +1,17 @@
+using System.Collections;
+using System.Collections.Generic;
+using Unity.VisualScripting;
+using UnityEngine;
+
+public class PlayerFollows : MonoBehaviour
+    //this script is for the main camera
+{
+    public Transform player;
+
+    // Update is called once per frame
+   private void Update()
+    {
+        //this allows the camera to follow the players position
+        transform.position = new Vector3(player.transform.position.x, transform.position.y,player.transform.position.z-5);
+    }
+}
