@@ -19,7 +19,8 @@ public class Player : MonoBehaviour
 
     [Header("Tower data")]
 
-    public Transform tankTower;
+    public Transform tankTowerTransform;
+    public float towerRotationSpeed;
 
     [Header("Aim data")]   
     
@@ -71,7 +72,10 @@ public class Player : MonoBehaviour
         transform.Rotate(0, horizontalInput * rotationSpeed, 0);
 
         //this creates the rotation for the tanks tower while aiming.
-        tankTower.LookAt(aimTransform);
+        Vector3 direction = aimTransform.position - tankTowerTransform.position;
+        direction.y = 0;
+        Quaternion targetRotation = Quaternion.LookRotation(direction);
+        tankTowerTransform.rotation = Quaternion.RotateTowards(tankTowerTransform.rotation, targetRotation, towerRotationSpeed);
     }
 
     //this is a function that will be used for aiming the gun of the tank.
@@ -91,4 +95,3 @@ public class Player : MonoBehaviour
         }
     }
 }
-
